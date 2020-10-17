@@ -39,3 +39,14 @@ mvPPT was trained using the python package [LightGBM](https://github.com/microso
 parameters were tuned by [Bayesian optimization](https://github.com/fmfn/BayesianOptimization). The random status was 
 set as `2020` throughout the model training process.
 
+## Environments
+The environments of mvPPT built in our study: 
+- python 3.7.4
+- sklearn 0.22.1
+- numpy 1.17.3
+- scipy 1.4.1
+- pandas 0.25.3
+- matplotlib 3.1.2
+- lightGBM 2.3.1
+- bayesian-optimization 1.1.0
+
