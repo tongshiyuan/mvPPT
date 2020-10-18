@@ -155,9 +155,9 @@ def train_model(train_data):
     return model, param
 
 
-train1s = pd.read_table('../example/train1s.txt')
-train2s = pd.read_table('../example/train2s.txt')
-train3s = pd.read_table('../example/train3s.txt')
+train1s = pd.read_table('../example/train1s_demo.txt')
+train2s = pd.read_table('../example/train2s_demo.txt')
+train3s = pd.read_table('../example/train3s_demo.txt')
 
 modelA, paramA = train_model(train3s[categoryA])
 pickle.dump(modelA, open("../example/modelA_demo.m", 'wb'))

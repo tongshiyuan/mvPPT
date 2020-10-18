@@ -29,6 +29,8 @@ gnomad_list1 = ['Gnomad_exomes_AF', 'Gnomad_exomes_hetf', 'Gnomad_exomes_homf',
 gnomad_list2 = ['Gnomad_exomes_wtf', 'Gnomad_exomes_EAS_wtf', 'Gnomad_exomes_NFE_wtf',
                 'Gnomad_exomes_AMR_wtf', 'Gnomad_exomes_ASJ_wtf', 'Gnomad_exomes_FIN_wtf',
                 'Gnomad_exomes_AFR_wtf', 'Gnomad_exomes_OTH_wtf', 'Gnomad_exomes_SAS_wtf']
+test_list = ['SIFT_score', 'cadd_snp_phred', 'PrimateAI', 'ReVe', 'mcap_v14', 'REVEL_score', 'ClinPred_Score',
+             'MetaSVM_score', 'MetaLR_score', 'Polyphen2_HDIV_score', 'Polyphen2_HVAR_score', 'VEST3_score']
 
 
 def feature_edit(data, gnomad_list1, gnomad_list2, features):
@@ -92,7 +94,7 @@ def get_training1(var3, var1, var2, gnomad_list1, gnomad_list2, features):
     df_vs3['tags'] = my_column
     df_vs3 = df_vs3[df_vs3['tags'].isin(['Benign', 'Pathogenic'])]
     df_vs3['tags'].replace({'Benign': 0, 'Pathogenic': 1}, inplace=True)
-    data = pd.concat([df_vs2, df_vs1, df_vs3])
+    data = pd.concat([df_vs2, df_vs1, df_vs3], sort=False)
     data.index = pd.RangeIndex(len(data.index))
 
     return feature_edit(data, gnomad_list1, gnomad_list2, features)
@@ -106,7 +108,7 @@ def get_training2(var2, var1, gnomad_list1, gnomad_list2, features):
     df_vs1['tags'] = 0
     df_vs2['tags'] = 1
     # concat
-    data = pd.concat([df_vs1, df_vs2])
+    data = pd.concat([df_vs1, df_vs2], sort=False)
     data.index = pd.RangeIndex(len(data.index))
 
     return feature_edit(data, gnomad_list1, gnomad_list2, features)
@@ -127,10 +129,15 @@ def get_training3(var2, var3, gnomad_list1, gnomad_list2, features):
     df_vs3 = df_vs3[df_vs3['tags'].isin(['Benign', 'Pathogenic'])]
     df_vs3['tags'].replace({'Benign': 0, 'Pathogenic': 1}, inplace=True)
 
-    data = pd.concat([df_vs2, df_vs3])
+    data = pd.concat([df_vs2, df_vs3], sort=False)
     data.index = pd.RangeIndex(len(data.index))
 
     return feature_edit(data, gnomad_list1, gnomad_list2, features)
+
+
+def get_testset(data, gnomad_list1, gnomad_list2, features):
+    df_test = pd.read_table(data)
+    return feature_edit(df_test, gnomad_list1, gnomad_list2, features)
 
 
 train1 = get_training1('../example/var3_demo.anno.txt', '../example/var1_demo.hg19_multianno.txt',
@@ -139,14 +146,17 @@ train2 = get_training2('../example/var2_demo.hg19_multianno.txt', '../example/va
                        gnomad_list1, gnomad_list2, categoryABC)
 train3 = get_training3('../example/var2_demo.hg19_multianno.txt', '../example/var3_demo.anno.txt', gnomad_list1,
                        gnomad_list2, categoryABC)
+test_set = get_testset('../example/ClinHGMD_demo.anno.txt', gnomad_list1, gnomad_list2, categoryABC + test_list)
 
 # All the features were selected to provide complementary information
 train1s = train1.dropna()
 train2s = train2.dropna()
 train3s = train3.dropna()
+test_sets = test_set.dropna()
 train1s.index = pd.RangeIndex(len(train1s.index))
 train2s.index = pd.RangeIndex(len(train2s.index))
 train3s.index = pd.RangeIndex(len(train3s.index))
+test_sets.index = pd.RangeIndex(len(test_sets.index))
 # print information
 print('training set 1')
 print(train1s['tags'].value_counts())
@@ -154,7 +164,10 @@ print('training set 2')
 print(train2s['tags'].value_counts())
 print('training set 3')
 print(train3s['tags'].value_counts())
+print('ClinHGMD')
+print(test_sets['tags'].value_counts())
 
-train1s.to_csv('../example/train1s.txt', sep='\t', index=False)
-train2s.to_csv('../example/train2s.txt', sep='\t', index=False)
-train3s.to_csv('../example/train3s.txt', sep='\t', index=False)
+train1s.to_csv('../example/train1s_demo.txt', sep='\t', index=False)
+train2s.to_csv('../example/train2s_demo.txt', sep='\t', index=False)
+train3s.to_csv('../example/train3s_demo.txt', sep='\t', index=False)
+test_sets.to_csv('../example/test_demo.txt', sep='\t', index=False)
