@@ -1,6 +1,6 @@
 # mvPPT
 
-mvPPT website is at: [http://mvppt.fudan.edu.cn/](http://mvppt.fudan.edu.cn/)  
+mvPPT website is at: [http://www.mvppt.club/](http://www.mvppt.club/)  
 or you can get scores at [google drive](https://drive.google.com/file/d/1zDT1e4B_-hQs4i-BLzXlcOWjCBdl7kjs/view?usp=sharing). 
 A comprehensive prediction tool, mvPPT (Pathogenicity Prediction Tool for missense variants).
 
